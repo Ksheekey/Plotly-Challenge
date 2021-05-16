@@ -82,7 +82,6 @@ function optionChanged(sample) {
         var metaData = d.metadata;
         var filterMeta = metaData.filter(sampleObject=>sampleObject.id==sample)
         var slicedMeta = filterMeta.slice()
-        console.log(Object.values(slicedMeta)[0])
         
         //inserting the demographic info to the panel
         d3.select(".panel-body")
@@ -91,7 +90,7 @@ function optionChanged(sample) {
             .enter()
             .append("div")
             .html(function(d) {
-                return `<div>${filterMeta[0][0]}: ${d.id}</div>
+                return `<div>id: ${d.id}</div>
                 <div>ethnicity: ${d.ethnicity}</div>
                 <div>gender: ${d.gender}</div>
                 <div>age: ${d.age}</div>
