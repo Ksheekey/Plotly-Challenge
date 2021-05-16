@@ -150,10 +150,11 @@ function optionChanged(sample) {
         const colorChoice = ["red","blue","orange","green","pink",];
 
         const random = Math.floor(Math.random() * colorChoice.length);
-        for (var j = 0; j<sampleValues.length; j++) {
-            color.push(colorChoice[random, j]);
+        console.log(colorChoice[random])
+        for (var k = 0; k<sampleValues.length; k++) {
+            console.log(k,colorChoice[random])
         }
-        console.log(color)
+        
 
 
 
