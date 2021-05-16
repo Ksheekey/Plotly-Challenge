@@ -1,4 +1,4 @@
-// reading the json file
+// reading the json file to append the dropdown dynamically
 d3.json("./samples.json").then((d) => {
     d3.select("#selDataset")
             .selectAll("option")
@@ -33,11 +33,11 @@ function defaultplot() {
         title: 'Hover over the points to see the text',
     };
 
+    //BUBBLE DEFAULT
     var bubbleX = [1, 2, 3, 4]
     var bubbleY = [26, 27, 28, 29]
     var otuLabels = []
 
-    //BUBBLE DEFAULT
     var maxmarkerSize = 40;
     var size = [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,]
     var traceBubble = {
@@ -48,7 +48,6 @@ function defaultplot() {
         marker: {
             color: ['rgb(93, 164, 214)', 'rgb(255, 144, 14)',  'rgb(44, 160, 101)', 'rgb(255, 65, 54)'],
             size: size,
-            //set 'sizeref' to an 'ideal' size given by the formula sizeref = 2. * max(array_of_size_values) / (desired_maximum_marker_size ** 2)
             sizeref: 2.0 * d3.max(size) / (maxmarkerSize**2),
             sizemode: 'area'
         }
@@ -73,10 +72,6 @@ d3.selectAll("#selDataset").on("change", optionChanged);
 
 function optionChanged(sample) {
     d3.json("./samples.json").then((d) => {
-        //setting a variable to ensure proper reading
-        var names = d.names;
-        //console.log(names)
-
         //setting up variable and filtering for the charts
         var samples = d.samples;
         var filterArray = samples.filter(sampleObject=>sampleObject.id==sample);
@@ -85,8 +80,9 @@ function optionChanged(sample) {
         
         //filtering data for the demographic info panel
         var metaData = d.metadata;
+        var filterMeta = metaData.filter(sampleObject=>sampleObject.id==sample)
+        console.log(filterMeta)
         var filterMeta = metaData.filter(sampleObject=>sampleObject.id==sample);
-        //var filterMetaData = filterMeta[0]
         var slicedMeta = filterMeta.slice()
         
         //inserting the demographic info to the panel
@@ -96,7 +92,7 @@ function optionChanged(sample) {
             .enter()
             .append("div")
             .html(function(d) {
-                return `<div>id: ${d.id}</div>
+                return `<div>${Object.keys(filterMeta[0],1)}: ${d.id}</div>
                 <div>ethnicity: ${d.ethnicity}</div>
                 <div>gender: ${d.gender}</div>
                 <div>age: ${d.age}</div>
@@ -107,11 +103,7 @@ function optionChanged(sample) {
             })
 
         var otuLabels = filterArray[0].otu_labels;
-        //console.log(otuLabels)
         
-        //var dropdownMenu = d3.select("#selDataset");
-        //var dataset = dropdownMenu.property("value");
-
         //creating empty lists for the (bar)chart info
         var sortOTUs = [];
         var dataData = [];
@@ -140,25 +132,15 @@ function optionChanged(sample) {
         //var desired_maximum_marker_size = sampleValues.max()
         var sizeRef = Math.ceil(2.0 * d3.max(size) / (maxmarkerSize**2))
 
-        // var colorChoice = ["red","blue","orange","green","pink",]
+        // colors for bubble
         var color = []
-        // for (var i = 0; i<sampleValues.length; i++) {
-        //     color.push(Math.random(colorChoice[i]))
-        // }
-        // console.log(color)
-
-        const colorChoice = ["red","blue","orange","green","pink",];
-
+        const colorChoice = ["red","blue","orange","green","pink"];
         const random = Math.floor(Math.random() * colorChoice.length);
-        console.log(colorChoice[random])
         for (var k = 0; k<sampleValues.length; k++) {
-            console.log(k,colorChoice[random])
+            color.push(k,colorChoice[random])
         }
         
-
-
-
-
+        //reestablishing bubble chart to change with selection
         var maxmarkerSize = d3.max(sampleValues);
         var size = size
         var traceBubble = {
@@ -167,9 +149,8 @@ function optionChanged(sample) {
         text: otuLabels,
         mode: 'markers',
         marker: {
-            color: ["red","blue","orange","green"],
+            color: color,
             size: size,
-            //set 'sizeref' to an 'ideal' size given by the formula sizeref = 2. * max(array_of_size_values) / (desired_maximum_marker_size ** 2)
             sizeref: 2.0 * d3.max(size) / (maxmarkerSize**2),
             sizemode: 'area'
             }
@@ -184,24 +165,13 @@ function optionChanged(sample) {
         width: 1100
         };
 
-        //DISPLAY DEFAULTS
+        //Display new bubble
         Plotly.newPlot("bubble", dataBubble, layoutBubble)
     
-
-
-
-
-        
         // Call function to update the chart
         updatePlotlyBarX(dataData);
         updatePlotlyBarY(sortOTUs);
         updatePlotlyBarText(textInfo);
-
-        // updatePlotlyBubbleX(otuIds);
-        // updatePlotlyBubbleY(sampleValues);
-        // updatePlotlyBubbleSize(size);
-        // updatePlotlyBubbleText(otuLabels);
-        // updatePlotlyBubbleSizeref(sizeRef);
     })
 
     //resetting the demographic info after each selection
@@ -218,21 +188,6 @@ function updatePlotlyBarY(newdata) {
 function updatePlotlyBarText(newdata) {
     Plotly.restyle("bar", "text", [newdata]);
 }
-// function updatePlotlyBubbleX(newdata) {
-//     Plotly.restyle("bubble", "x", [newdata]);
-// }
-// function updatePlotlyBubbleY(newdata) {
-//     Plotly.restyle("bubble", "y", [newdata]);
-// }
-// function updatePlotlyBubbleSize(newdata) {
-//     Plotly.restyle("bubble", "size", [newdata]);
-// }
-// function updatePlotlyBubbleText(newdata) {
-//     Plotly.restyle("bubble", "text", [newdata]);
-// }
-// function updatePlotlyBubbleSizeref(newdata) {
-//     Plotly.restyle("bubble", "marker", "sizeref", [newdata]);
-//}
 
 //calling defaults
 defaultplot()
