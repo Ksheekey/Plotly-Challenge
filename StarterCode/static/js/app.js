@@ -33,21 +33,21 @@ function defaultplot() {
         title: 'Hover over the points to see the text',
     };
 
-    var bubbleX = []
-    var bubbleY = []
+    var bubbleX = [1, 2, 3, 4]
+    var bubbleY = [26, 27, 28, 29]
 
     //BUBBLE DEFAULT
     var maxmarkerSize = 40;
     var size = [400, 600, 800, 1000];
     var traceBubble = {
-        x: [1, 2, 3, 4],
-        y: [26, 27, 28, 29],
-        text: ['A</br>size: 40</br>sixeref: 1.25', 'B</br>size: 60</br>sixeref: 1.25', 'C</br>size: 80</br>sixeref: 1.25', 'D</br>size: 100</br>sixeref: 1.25'],
+        x: bubbleX,
+        y: bubbleY,
+        text: textInfo,
         mode: 'markers',
         marker: {
         size: size,
         //set 'sizeref' to an 'ideal' size given by the formula sizeref = 2. * max(array_of_size_values) / (desired_maximum_marker_size ** 2)
-        sizeref: 2.0 * Math.max(...size) / (desired_maximum_marker_size**2),
+        sizeref: 2.0 * Math.max(size) / (maxmarkerSize**2),
         sizemode: 'area'
         }
     };
@@ -133,24 +133,41 @@ function optionChanged(sample) {
         sortOTU.forEach(function(xx) {
             sortOTUs.push(`OTU ${xx}`)
         })
+
+
+
+
         
         //BUBBLE WORK***************
-        // var bubbleX = otuIds.sort((a,b)=>b-a).reverse()
-        // var bubbleY = sampleValues.reverse()
-        // console.log(bubbleX)
-        // console.log(bubbleY)
+        var bubbleX = otuIds.sort((a,b)=>b-a).reverse()
+        var bubbleY = sampleValues.reverse()
+        var size = sampleValues.reverse()
+        console.log(bubbleX)
+        console.log(bubbleY)
 
         var maxmarkerSize = d3.max(sampleValues)
         //var desired_maximum_marker_size = sampleValues.max()
-        console.log(maxSV)
+        console.log(maxmarkerSize)
+
+        var sizeRef = 2.0 * math.max(size) / (maxmarkerSize**2)
+        console.log(sizeRef)
+
+
+
+
+
+
         
         // Call function to update the chart
         updatePlotlyBarX(dataData);
         updatePlotlyBarY(sortOTUs);
         updatePlotlyBarText(textInfo);
+
         updatePlotlyBubbleX(bubbleX);
         updatePlotlyBubbleY(bubbleY);
-        updatePlotlyBubbleSize(bubbleY);
+        updatePlotlyBubbleSize(size);
+        updatePlotlyBubbleText(textInfo);
+        updatePlotlyBubbleSizeref
     })
 
     //resetting the demographic info after each selection
@@ -174,7 +191,13 @@ function updatePlotlyBubbleY(newdata) {
     Plotly.restyle("bubble", "y", [newdata]);
 }
 function updatePlotlyBubbleSize(newdata) {
-    Plotly.restyle("bubble", "size", [newdata]);
+    Plotly.restyle("bubble", "marker", "size", [newdata]);
+}
+function updatePlotlyBubbleText(newdata) {
+    Plotly.restyle("bubble", "text", [newdata]);
+}
+function updatePlotlyBubbleSizeref(newdata) {
+    Plotly.restyle("bubble", "marker", "sizeref", [newdata]);
 }
 
 //calling defaults
