@@ -33,20 +33,34 @@ function defaultplot() {
         title: 'Hover over the points to see the text',
     };
 
-    var bubbleX = [1,2,3,4,5,6,7,8,9,10]
-    var bubbleY = [1,2,3,4,5,6,7,8,9,10]
+    var bubbleX = []
+    var bubbleY = []
 
     //BUBBLE DEFAULT
+    var maxmarkerSize = 40;
+    var size = [400, 600, 800, 1000];
     var traceBubble = {
-        x: bubbleX,
-        y: bubbleY,
-        text: ['A<br>size: 40', 'B<br>size: 60', 'C<br>size: 80', 'D<br>size: 100'],
+        x: [1, 2, 3, 4],
+        y: [26, 27, 28, 29],
+        text: ['A</br>size: 40</br>sixeref: 1.25', 'B</br>size: 60</br>sixeref: 1.25', 'C</br>size: 80</br>sixeref: 1.25', 'D</br>size: 100</br>sixeref: 1.25'],
         mode: 'markers',
         marker: {
-          color: "red",
-          size: bubbleY
+        size: size,
+        //set 'sizeref' to an 'ideal' size given by the formula sizeref = 2. * max(array_of_size_values) / (desired_maximum_marker_size ** 2)
+        sizeref: 2.0 * Math.max(...size) / (desired_maximum_marker_size**2),
+        sizemode: 'area'
         }
-      };
+    };
+    // var traceBubble = {
+    //     x: bubbleX,
+    //     y: bubbleY,
+    //     text: ['A<br>size: 40', 'B<br>size: 60', 'C<br>size: 80', 'D<br>size: 100'],
+    //     mode: 'markers',
+    //     marker: {
+    //       color: "red",
+    //       size: 5
+    //     }
+    //   };
 
     var dataBubble = [traceBubble]
 
@@ -119,11 +133,16 @@ function optionChanged(sample) {
         sortOTU.forEach(function(xx) {
             sortOTUs.push(`OTU ${xx}`)
         })
+        
+        //BUBBLE WORK***************
+        // var bubbleX = otuIds.sort((a,b)=>b-a).reverse()
+        // var bubbleY = sampleValues.reverse()
+        // console.log(bubbleX)
+        // console.log(bubbleY)
 
-        var bubbleX = otuIds.sort((a,b)=>b-a).reverse()
-        var bubbleY = sampleValues.reverse()
-        console.log(bubbleX)
-        console.log(bubbleY)
+        var maxmarkerSize = d3.max(sampleValues)
+        //var desired_maximum_marker_size = sampleValues.max()
+        console.log(maxSV)
         
         // Call function to update the chart
         updatePlotlyBarX(dataData);
