@@ -38,11 +38,7 @@ function defaultplot() {
 
     //BUBBLE DEFAULT
     var maxmarkerSize = 40;
-    var size = []
-    maxmarkerSize.map(function(d) {
-        d.push(size)
-    });
-    console.log(size)
+    var size = [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,]
     var traceBubble = {
         x: bubbleX,
         y: bubbleY,
@@ -55,17 +51,7 @@ function defaultplot() {
         sizemode: 'area'
         }
     };
-    // var traceBubble = {
-    //     x: bubbleX,
-    //     y: bubbleY,
-    //     text: ['A<br>size: 40', 'B<br>size: 60', 'C<br>size: 80', 'D<br>size: 100'],
-    //     mode: 'markers',
-    //     marker: {
-    //       color: "red",
-    //       size: 5
-    //     }
-    //   };
-
+    
     var dataBubble = [traceBubble]
 
     var layoutBubble = {
@@ -94,6 +80,7 @@ function optionChanged(sample) {
         var filterArray = samples.filter(sampleObject=>sampleObject.id==sample);
         var sampleValues = filterArray[0].sample_values;
         var otuIds = filterArray[0].otu_ids;
+        console.log(otuIds)
 
         //filtering data for the demographic info panel
         var metaData = d.metadata;
@@ -139,24 +126,32 @@ function optionChanged(sample) {
         })
 
 
-
+        
 
         
         //BUBBLE WORK***************
         var bubbleX = otuIds.sort((a,b)=>b-a).reverse()
         var bubbleY = sampleValues.reverse()
         var size = sampleValues.reverse()
-        console.log(bubbleX)
-        console.log(bubbleY)
+        console.log(otuIds)
+        console.log(sampleValues)
 
         var maxmarkerSize = d3.max(sampleValues)
+        var minmarkerSize = d3.min(sampleValues)
         //var desired_maximum_marker_size = sampleValues.max()
         console.log(maxmarkerSize)
 
-        var sizeRef = 2.0 * d3.max(size) / (maxmarkerSize**2)
+        var sizeRef = Math.ceil(2.0 * d3.max(size) / (maxmarkerSize**2))
         console.log(sizeRef)
 
+        
 
+        var randomSV = []
+
+        for (var i = 0; i < sampleValues.length; i++) {
+            randomSV.push(Math.round(Math.random(sampleValues[i])));
+        }
+        console.log(randomSV)
 
 
 
@@ -167,8 +162,8 @@ function optionChanged(sample) {
         updatePlotlyBarY(sortOTUs);
         updatePlotlyBarText(textInfo);
 
-        updatePlotlyBubbleX(bubbleX);
-        updatePlotlyBubbleY(bubbleY);
+        updatePlotlyBubbleX(otuIds);
+        updatePlotlyBubbleY(sampleValues);
         updatePlotlyBubbleSize(size);
         updatePlotlyBubbleText(textInfo);
         updatePlotlyBubbleSizeref(sizeRef);
