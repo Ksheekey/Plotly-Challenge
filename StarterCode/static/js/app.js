@@ -33,15 +33,18 @@ function defaultplot() {
         title: 'Hover over the points to see the text',
     };
 
+    var bubbleX = [1,2,3,4,5,6,7,8,9,10]
+    var bubbleY = [1,2,3,4,5,6,7,8,9,10]
+
     //BUBBLE DEFAULT
     var traceBubble = {
-        x: [1, 2, 3, 4],
-        y: [10, 11, 12, 13],
+        x: bubbleX,
+        y: bubbleY,
         text: ['A<br>size: 40', 'B<br>size: 60', 'C<br>size: 80', 'D<br>size: 100'],
         mode: 'markers',
         marker: {
           color: ['rgb(93, 164, 214)', 'rgb(255, 144, 14)',  'rgb(44, 160, 101)', 'rgb(255, 65, 54)'],
-          size: [40, 60, 80, 100]
+          size: bubbleY
         }
       };
 
@@ -112,14 +115,23 @@ function optionChanged(sample) {
         var dataData = sampleValues.sort((a,b)=>b-a).slice(0,10).reverse()
         var textInfo = otuLabels.sort((a,b)=>b-a).slice(0,10).reverse()
         
+        // making the OTU ID's into a string for the bar chart Y axis labels
         sortOTU.forEach(function(xx) {
             sortOTUs.push(`OTU ${xx}`)
         })
+
+        var bubbleX = otuIds
+        var bubbleY = sampleValues
+        console.log(bubbleX)
+        console.log(bubbleY)
         
         // Call function to update the chart
         updatePlotlyBarX(dataData);
         updatePlotlyBarY(sortOTUs);
-        updatePlotlyBarText(textInfo)
+        updatePlotlyBarText(textInfo);
+        updatePlotlyBubbleX(bubbleX);
+        updatePlotlyBubbleY(bubbleY);
+        //updatePlotlyBubbleSize(bubbleY);
     })
 
     //resetting the demographic info after each selection
@@ -135,6 +147,15 @@ function updatePlotlyBarY(newdata) {
 }
 function updatePlotlyBarText(newdata) {
     Plotly.restyle("bar", "text", [newdata]);
+}
+function updatePlotlyBubbleX(newdata) {
+    Plotly.restyle("bubble", "x", [newdata]);
+}
+function updatePlotlyBubbleY(newdata) {
+    Plotly.restyle("bubble", "y", [newdata]);
+}
+function updatePlotlyBubbleSize(newdata) {
+    Plotly.restyle("bubble", "size", [newdata]);
 }
 
 //calling defaults
