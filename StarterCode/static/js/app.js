@@ -35,6 +35,7 @@ function defaultplot() {
 
     var bubbleX = [1, 2, 3, 4]
     var bubbleY = [26, 27, 28, 29]
+    var otuLabels = []
 
     //BUBBLE DEFAULT
     var maxmarkerSize = 40;
@@ -42,7 +43,7 @@ function defaultplot() {
     var traceBubble = {
         x: bubbleX,
         y: bubbleY,
-        text: textInfo,
+        text: otuLabels,
         mode: 'markers',
         marker: {
         size: size,
@@ -80,8 +81,7 @@ function optionChanged(sample) {
         var filterArray = samples.filter(sampleObject=>sampleObject.id==sample);
         var sampleValues = filterArray[0].sample_values;
         var otuIds = filterArray[0].otu_ids;
-        console.log(otuIds)
-
+        
         //filtering data for the demographic info panel
         var metaData = d.metadata;
         var filterMeta = metaData.filter(sampleObject=>sampleObject.id==sample);
@@ -133,25 +133,30 @@ function optionChanged(sample) {
         var bubbleX = otuIds.sort((a,b)=>b-a).reverse()
         var bubbleY = sampleValues.reverse()
         var size = sampleValues.reverse()
-        console.log(otuIds)
-        console.log(sampleValues)
-
+        
         var maxmarkerSize = d3.max(sampleValues)
         var minmarkerSize = d3.min(sampleValues)
         //var desired_maximum_marker_size = sampleValues.max()
-        console.log(maxmarkerSize)
-
         var sizeRef = Math.ceil(2.0 * d3.max(size) / (maxmarkerSize**2))
-        console.log(sizeRef)
 
-        
-
-        var randomSV = []
-
-        for (var i = 0; i < sampleValues.length; i++) {
-            randomSV.push(Math.round(Math.random(sampleValues[i])));
+        var maxmarkerSize = 40;
+        var size = [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,]
+        var traceBubble = {
+        x: bubbleX,
+        y: bubbleY,
+        text: otuLabels,
+        mode: 'markers',
+        marker: {
+        size: size,
+        //set 'sizeref' to an 'ideal' size given by the formula sizeref = 2. * max(array_of_size_values) / (desired_maximum_marker_size ** 2)
+        sizeref: 2.0 * d3.max(size) / (maxmarkerSize**2),
+        sizemode: 'area'
         }
-        console.log(randomSV)
+    };
+    
+    var dataBubble = [traceBubble]
+        
+    
 
 
 
@@ -165,7 +170,7 @@ function optionChanged(sample) {
         updatePlotlyBubbleX(otuIds);
         updatePlotlyBubbleY(sampleValues);
         updatePlotlyBubbleSize(size);
-        updatePlotlyBubbleText(textInfo);
+        updatePlotlyBubbleText(otuLabels);
         updatePlotlyBubbleSizeref(sizeRef);
     })
 
@@ -190,7 +195,7 @@ function updatePlotlyBubbleY(newdata) {
     Plotly.restyle("bubble", "y", [newdata]);
 }
 function updatePlotlyBubbleSize(newdata) {
-    Plotly.restyle("bubble", "marker", "size", [newdata]);
+    Plotly.restyle("bubble", "size", [newdata]);
 }
 function updatePlotlyBubbleText(newdata) {
     Plotly.restyle("bubble", "text", [newdata]);
