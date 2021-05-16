@@ -46,10 +46,11 @@ function defaultplot() {
         text: otuLabels,
         mode: 'markers',
         marker: {
-        size: size,
-        //set 'sizeref' to an 'ideal' size given by the formula sizeref = 2. * max(array_of_size_values) / (desired_maximum_marker_size ** 2)
-        sizeref: 2.0 * d3.max(size) / (maxmarkerSize**2),
-        sizemode: 'area'
+            color: ['rgb(93, 164, 214)', 'rgb(255, 144, 14)',  'rgb(44, 160, 101)', 'rgb(255, 65, 54)'],
+            size: size,
+            //set 'sizeref' to an 'ideal' size given by the formula sizeref = 2. * max(array_of_size_values) / (desired_maximum_marker_size ** 2)
+            sizeref: 2.0 * d3.max(size) / (maxmarkerSize**2),
+            sizemode: 'area'
         }
     };
     
@@ -134,28 +135,56 @@ function optionChanged(sample) {
         var bubbleY = sampleValues.reverse()
         var size = sampleValues.reverse()
         
-        var maxmarkerSize = d3.max(sampleValues)
+        //var maxmarkerSize = d3.max(sampleValues)
         var minmarkerSize = d3.min(sampleValues)
         //var desired_maximum_marker_size = sampleValues.max()
         var sizeRef = Math.ceil(2.0 * d3.max(size) / (maxmarkerSize**2))
 
-        var maxmarkerSize = 40;
-        var size = [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,]
+        // var colorChoice = ["red","blue","orange","green","pink",]
+        var color = []
+        // for (var i = 0; i<sampleValues.length; i++) {
+        //     color.push(Math.random(colorChoice[i]))
+        // }
+        // console.log(color)
+
+        const colorChoice = ["red","blue","orange","green","pink",];
+
+        const random = Math.floor(Math.random() * colorChoice.length);
+        for (var j = 0; j<sampleValues.length; j++) {
+            color.push(colorChoice[random, j]);
+        }
+        console.log(color)
+
+
+
+
+        var maxmarkerSize = d3.max(sampleValues);
+        var size = size
         var traceBubble = {
         x: bubbleX,
         y: bubbleY,
         text: otuLabels,
         mode: 'markers',
         marker: {
-        size: size,
-        //set 'sizeref' to an 'ideal' size given by the formula sizeref = 2. * max(array_of_size_values) / (desired_maximum_marker_size ** 2)
-        sizeref: 2.0 * d3.max(size) / (maxmarkerSize**2),
-        sizemode: 'area'
-        }
-    };
+            color: ["red","blue","orange","green"],
+            size: size,
+            //set 'sizeref' to an 'ideal' size given by the formula sizeref = 2. * max(array_of_size_values) / (desired_maximum_marker_size ** 2)
+            sizeref: 2.0 * d3.max(size) / (maxmarkerSize**2),
+            sizemode: 'area'
+            }
+        };
     
-    var dataBubble = [traceBubble]
+        var dataBubble = [traceBubble]
         
+        var layoutBubble = {
+        title: 'Bubble Chart Hover Text',
+        showlegend: false,
+        height: 500,
+        width: 1100
+        };
+
+        //DISPLAY DEFAULTS
+        Plotly.newPlot("bubble", dataBubble, layoutBubble)
     
 
 
@@ -167,11 +196,11 @@ function optionChanged(sample) {
         updatePlotlyBarY(sortOTUs);
         updatePlotlyBarText(textInfo);
 
-        updatePlotlyBubbleX(otuIds);
-        updatePlotlyBubbleY(sampleValues);
-        updatePlotlyBubbleSize(size);
-        updatePlotlyBubbleText(otuLabels);
-        updatePlotlyBubbleSizeref(sizeRef);
+        // updatePlotlyBubbleX(otuIds);
+        // updatePlotlyBubbleY(sampleValues);
+        // updatePlotlyBubbleSize(size);
+        // updatePlotlyBubbleText(otuLabels);
+        // updatePlotlyBubbleSizeref(sizeRef);
     })
 
     //resetting the demographic info after each selection
@@ -188,21 +217,21 @@ function updatePlotlyBarY(newdata) {
 function updatePlotlyBarText(newdata) {
     Plotly.restyle("bar", "text", [newdata]);
 }
-function updatePlotlyBubbleX(newdata) {
-    Plotly.restyle("bubble", "x", [newdata]);
-}
-function updatePlotlyBubbleY(newdata) {
-    Plotly.restyle("bubble", "y", [newdata]);
-}
-function updatePlotlyBubbleSize(newdata) {
-    Plotly.restyle("bubble", "size", [newdata]);
-}
-function updatePlotlyBubbleText(newdata) {
-    Plotly.restyle("bubble", "text", [newdata]);
-}
-function updatePlotlyBubbleSizeref(newdata) {
-    Plotly.restyle("bubble", "marker", "sizeref", [newdata]);
-}
+// function updatePlotlyBubbleX(newdata) {
+//     Plotly.restyle("bubble", "x", [newdata]);
+// }
+// function updatePlotlyBubbleY(newdata) {
+//     Plotly.restyle("bubble", "y", [newdata]);
+// }
+// function updatePlotlyBubbleSize(newdata) {
+//     Plotly.restyle("bubble", "size", [newdata]);
+// }
+// function updatePlotlyBubbleText(newdata) {
+//     Plotly.restyle("bubble", "text", [newdata]);
+// }
+// function updatePlotlyBubbleSizeref(newdata) {
+//     Plotly.restyle("bubble", "marker", "sizeref", [newdata]);
+//}
 
 //calling defaults
 defaultplot()
