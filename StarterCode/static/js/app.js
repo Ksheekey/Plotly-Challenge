@@ -38,7 +38,11 @@ function defaultplot() {
 
     //BUBBLE DEFAULT
     var maxmarkerSize = 40;
-    var size = [400, 600, 800, 1000];
+    var size = []
+    maxmarkerSize.map(function(d) {
+        d.push(size)
+    });
+    console.log(size)
     var traceBubble = {
         x: bubbleX,
         y: bubbleY,
@@ -47,7 +51,7 @@ function defaultplot() {
         marker: {
         size: size,
         //set 'sizeref' to an 'ideal' size given by the formula sizeref = 2. * max(array_of_size_values) / (desired_maximum_marker_size ** 2)
-        sizeref: 2.0 * Math.max(size) / (maxmarkerSize**2),
+        sizeref: 2.0 * d3.max(size) / (maxmarkerSize**2),
         sizemode: 'area'
         }
     };
@@ -149,7 +153,7 @@ function optionChanged(sample) {
         //var desired_maximum_marker_size = sampleValues.max()
         console.log(maxmarkerSize)
 
-        var sizeRef = 2.0 * math.max(size) / (maxmarkerSize**2)
+        var sizeRef = 2.0 * d3.max(size) / (maxmarkerSize**2)
         console.log(sizeRef)
 
 
@@ -167,7 +171,7 @@ function optionChanged(sample) {
         updatePlotlyBubbleY(bubbleY);
         updatePlotlyBubbleSize(size);
         updatePlotlyBubbleText(textInfo);
-        updatePlotlyBubbleSizeref
+        updatePlotlyBubbleSizeref(sizeRef);
     })
 
     //resetting the demographic info after each selection
