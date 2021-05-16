@@ -13,8 +13,8 @@ d3.json("./samples.json").then((d) => {
 
 // setting default arrays
 var dataData = [1,2,3,4,5,6,7,8,9,10]
-var sortOTUs = ["top","mij","mil","tjr","eth","sgh","n6t","ngs","hhh","bdf"]
-var textInfo = ["top","mij","mil","tjr","eth","sgh","n6t","ngs","hhh","bdf"]
+var sortOTUs = ["hw","challenge","plotly","script","java","camp","boot","science","data","rutgers"]
+var textInfo = ["hw","challenge","plotly","script","java","camp","boot","science","data","rutgers"]
 
 // Display the default plot
 function defaultplot() {
@@ -64,19 +64,26 @@ d3.selectAll("#selDataset").on("change", optionChanged);
 
 function optionChanged(sample) {
     d3.json("./samples.json").then((d) => {
+        //setting a variable to ensure proper reading
         var names = d.names;
+        //console.log(names)
+
+        //setting up variable and filtering for the charts
         var samples = d.samples;
         var filterArray = samples.filter(sampleObject=>sampleObject.id==sample);
         var sampleValues = filterArray[0].sample_values;
         var otuIds = filterArray[0].otu_ids;
+
+        //filtering data for the demographic info panel
         var metaData = d.metadata;
         var filterMeta = metaData.filter(sampleObject=>sampleObject.id==sample);
-        var filterMetaData = filterMeta[0]
-        var abc = filterMeta.slice()
+        //var filterMetaData = filterMeta[0]
+        var slicedMeta = filterMeta.slice()
         
+        //inserting the demographic info to the panel
         d3.select(".panel-body")
             .selectAll("div")
-            .data(abc)
+            .data(slicedMeta)
             .enter()
             .append("div")
             .html(function(d) {
@@ -90,32 +97,29 @@ function optionChanged(sample) {
 
             })
 
-        
-
-
-
         var otuLabels = filterArray[0].otu_labels;
-        console.log(otuLabels)
+        //console.log(otuLabels)
         
-        var dropdownMenu = d3.select("#selDataset");
-        var dataset = dropdownMenu.property("value");
+        //var dropdownMenu = d3.select("#selDataset");
+        //var dataset = dropdownMenu.property("value");
+
+        //creating empty lists for the (bar)chart info
         var sortOTUs = [];
         var dataData = [];
-        
-        //
+        var textInfo = [];
+        //sorting the data into variables to call later
         var sortOTU = otuIds.sort((a,b)=>b-a).slice(0,10).reverse()
         var dataData = sampleValues.sort((a,b)=>b-a).slice(0,10).reverse()
-
+        var textInfo = otuLabels.sort((a,b)=>b-a).slice(0,10).reverse()
+        
         sortOTU.forEach(function(xx) {
-            sortOTUs.push(xx)
+            sortOTUs.push(`OTU ${xx}`)
         })
         
-        console.log(sortOTUs)
-        console.log(dataData)
-
         // Call function to update the chart
         updatePlotlyBarX(dataData);
-        //updatePlotlyBarY(sortOTUs);
+        updatePlotlyBarY(sortOTUs);
+        updatePlotlyBarText(textInfo)
     })
 
     //resetting the demographic info after each selection
@@ -129,6 +133,9 @@ function updatePlotlyBarX(newdata) {
 function updatePlotlyBarY(newdata) {
     Plotly.restyle("bar", "y", [newdata]);
 }
+function updatePlotlyBarText(newdata) {
+    Plotly.restyle("bar", "text", [newdata]);
+}
 
-
+//calling defaults
 defaultplot()
