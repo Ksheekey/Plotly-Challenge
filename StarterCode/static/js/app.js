@@ -43,7 +43,7 @@ function defaultplot() {
         text: ['A<br>size: 40', 'B<br>size: 60', 'C<br>size: 80', 'D<br>size: 100'],
         mode: 'markers',
         marker: {
-          color: ['rgb(93, 164, 214)', 'rgb(255, 144, 14)',  'rgb(44, 160, 101)', 'rgb(255, 65, 54)'],
+          color: "red",
           size: bubbleY
         }
       };
@@ -120,8 +120,8 @@ function optionChanged(sample) {
             sortOTUs.push(`OTU ${xx}`)
         })
 
-        var bubbleX = otuIds
-        var bubbleY = sampleValues
+        var bubbleX = otuIds.sort((a,b)=>b-a).reverse()
+        var bubbleY = sampleValues.reverse()
         console.log(bubbleX)
         console.log(bubbleY)
         
@@ -131,7 +131,7 @@ function optionChanged(sample) {
         updatePlotlyBarText(textInfo);
         updatePlotlyBubbleX(bubbleX);
         updatePlotlyBubbleY(bubbleY);
-        //updatePlotlyBubbleSize(bubbleY);
+        updatePlotlyBubbleSize(bubbleY);
     })
 
     //resetting the demographic info after each selection
